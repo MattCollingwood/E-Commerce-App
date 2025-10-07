@@ -1,0 +1,639 @@
+openapi: 3.0.1
+info:
+  title: E-Commerce Swim Store Exercise
+  version: 1.0.0
+  description: >-
+    An exercise to complete the Codecademy E-commerce App portfolio task that
+    allows users to perform various CRUD operations such as registering an
+    account, browsing products, ordering items and much more.
+paths:
+  /auth/login:
+    summary: Initiates the local login
+    description: Submits the username and password through login page
+    get:
+      summary: Gets user login page
+      description: Retrieves user login page
+      parameters: []
+      operationId: ''
+      responses:
+        200:
+          description: login page
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - auth
+    post:
+      summary: Initiates local login
+      description: Submits username and password through login page
+      operationId: ''
+      responses:
+        200:
+          description: Success redirects to user's profile page, and failue goes back to the login page
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - auth
+  /auth/logout:
+    summary: User logout
+    description: Logs out user and retrieves login page
+    get:
+      summary: User logout
+      description: Logs out user and retrieves login page
+      operationId: ''
+      responses:
+        200:
+          description: login page
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - auth
+  /auth/google:
+    summary: Gets Google login page
+    description: Redirects to Google Login page
+    get:
+      summary: Gets Google login page
+      description: Redirects to Google login page
+      operationId: ''
+      responses:
+        200:
+          description: login page
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - auth
+  /auth/google/redirect/:
+    summary: Initiates Google login
+    description: Utilizes Google profile info to register/login
+    get:
+      summary: Initiates Google login
+      description: Utilizes Google profile info to register/login
+      operationId: ''
+      responses:
+        200:
+          description: Google login redirects to user's profile page
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - auth
+  /cart:
+    summary: Creates a new cart
+    description: Creates a new cart and will associate it with userId
+    post:
+      summary: Creates a new cart
+      description: Creates a new cart and associates it with userId
+      operationId: ''
+      responses:
+        201:
+          description: New cart created
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - cart
+  /cart/{cartId}:
+    summary: Gets cart by id
+    description: Retrieves a cart by its id
+    parameters:
+    - name: cartId
+      in: path
+      required: true
+      description: Retrieves a cart by its id
+      schema:
+        type: string
+    get:
+      summary: Gets cart by id
+      description: Retrieves a cart by it's id
+      operationId: ''
+      responses:
+        200:
+          description: Cart retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - cart
+    put:
+      summary: Updates the cart items by cart id
+      description: Modifies, adds or deletes products from the cart by cart id
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartProducts"
+        204:
+          description: Cart item successfully deleted
+        400:
+          $ref: "#/components/responses/Standard400ErrorResponse"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - cart
+  /cart/{cartId}/checkout:
+    summary: Creates an order
+    description: >-
+      Creates an order for the cart items with the supplied address and payment
+      information
+    parameters:
+    - name: cartId
+      in: path
+      required: true
+      description: Retrieves a cart by its id
+      schema:
+        type: string
+    post:
+      summary: Creates and order
+      description: >-
+        Creates an order for the cart items with the supplied address and
+        payment information
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        400:
+          $ref: "#/components/responses/Standard400ErrorResponse"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - cart
+  /products:
+    summary: Gets a list of products
+    description: >-
+      Retrieves all products or products by category either sorted or unsorted
+      by price
+    get:
+      summary: Gets a list of products
+      description: >-
+        Retrieves all products or product by category either sorted or unsorted
+        by price
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        400:
+          $ref: "#/components/responses/Standard400ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - products
+  /products/{productId}:
+    summary: Gets a product by Id
+    description: Retrieves a product by it's id
+    parameters:
+    - name: productId
+      in: path
+      required: true
+      description: Retrieves a product by its id
+      schema:
+        type: string
+    get:
+      summary: Gets a product by id
+      description: Retrieves a product by its id
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - products
+  /users/register:
+    summary: Gets users registration page
+    description: Retrieves user registration page
+    get:
+      summary: Gets user registration page
+      description: Retrieves user registration page
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - users
+    post:
+      summary: Initiates user registration
+      description: Submits new user information through registration page
+      operationId: ''
+      responses:
+        201:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - users
+  /users/profile:
+    summary: Gets the user's profile page
+    description: Retrieves the users profile page
+    get:
+      summary: Gets the user's profile page
+      description: Retrieves an authenticated user's profile page
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - users
+  /users/{userId}:
+    summary: Gets user by id
+    description: Retrieves a single user by id
+    parameters:
+    - name: userId
+      in: path
+      required: true
+      description: Retrieves a user by their id
+      schema:
+        type: string
+    get:
+      summary: Gets user by id
+      description: Retrieves a single user by id
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - users
+    put:
+      summary: Updates a user by id
+      description: Modifies an authenticated user's account information by userId
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - users
+  /users/{userId}/orders:
+    summary: Gets past orders by user id
+    description: Retrieves order history of a single authenticated user by id
+    parameters:
+    - name: userId
+      in: path
+      required: true
+      description: Retrieves a user by their id
+      schema:
+        type: string
+    get:
+      summary: Gets past orders by user id
+      description: Retrieves order history of a single authenticated user by id
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        400:
+          $ref: "#/components/responses/Standard400ErrorResponse"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - orders
+  /users/{userId}/orders/{orderId}:
+    summary: Gets an order by id
+    description: Retrieves a single order of an authenticated user by userId and orderId
+    parameters:
+    - name: userId
+      in: path
+      required: true
+      description: Retrieves a user by their id
+      schema:
+        type: string
+    - name: orderId
+      in: path
+      required: true
+      description: Retrieves an order by their id
+      schema:
+        type: string
+    get:
+      summary: Gets an order by id
+      description: Retrieves a single order of an authenticated use by userId and orderId
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Order"
+        400:
+          $ref: "#/components/responses/Standard400ErrorResponse"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - orders
+    delete:
+      summary: Deletes an order by id
+      description: Deletes a single order of an authenticated user by userId and orderId
+      operationId: ''
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        404:
+          $ref: "#/components/responses/Standard404ErrorResponse"
+        500:
+          $ref: "#/components/responses/Standard500ErrorResponse"
+      tags:
+        - orders
+tags:
+  - name: auth
+    description: Authentication for logging in and out
+  - name: cart
+    description: Operations on user carts
+  - name: products
+    description: Operations on products
+  - name: users
+    description: Operations on user accounts
+  - name: orders
+    description: Operations on orders
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        subtotal:
+          type: number
+          format: decimal
+    CartItem:
+      type: object
+      properties:
+        cart_id:
+          type: string
+          format: uuid
+        product_id:
+          type: integer
+        name:
+          type: string
+          description: Name of the product
+        cart_quantity:
+          type: integer
+        sell_price:
+          type: number
+          format: decimal
+        item_total:
+          type: number
+          format: decimal
+    CartProducts:
+      type: object
+      properties:
+        cart_id:
+          type: string
+          format: uuid
+        product_id:
+          type: integer
+        cart_quantity:
+          type: integer
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    Order:
+      type: object
+      properties:
+        processedOrder:
+          $ref: "#/components/schemas/ProcessedOrder"
+        orderDetails:
+          $ref: "#/components/schemas/OrderDetails"
+    OrderDetails:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        product_id:
+          type: integer
+        name:
+          type: string
+          description: Name of the product
+        order_quantity:
+          type: integer
+        item_price:
+          type: number
+          format: decimal
+        item_total:
+          type: number
+          format: decimal
+    Orders:
+      type: array
+      items:
+        $ref: "#/components/schemas/ProcessedOrder"
+    PaymentInfo:
+      type: object
+      properties:
+        paySuccess:
+          type: boolean
+        payMethod:
+          type: string
+          description: Type of card such as visa, mastercard, etc.
+        cardNum:
+          type: number
+          description: Sixteen digit card number
+        cardExp:
+          type: string
+          format: date
+        cardCVV:
+          type: integer
+          description: Three digit card security code
+    ProcessedOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order status
+          enum:
+          - processing
+          - shipped
+          - delivered
+          - returned
+        total:
+          type: number
+          format: decimal
+        ship_date:
+          type: string
+          format: date-time
+        shipto_name:
+          type: string
+        shipto_street:
+          type: string
+        shipto_city:
+          type: string
+        shipto_state:
+          type: string
+        shipto_zip:
+          type: string
+        email:
+          type: string
+        pay_method:
+          type: string
+          description: Type of card such as visa, mastercard, etc.
+        card_num:
+          type: number
+          description: Last four digits of the card number
+        users_id:
+          type: string
+          format: uuid
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+          description: Name of the product's category
+        sell_price:
+          type: number
+          format: decimal
+        stock_quantity:
+          type: integer
+    Products:
+      type: array
+      items:
+        $ref: "#/components/schemas/Product"
+    ShippingAddress:
+      type: object
+      properties:
+        shipToName:
+          type: string
+        shipToStreet:
+          type: string
+        shipToCity:
+          type: string
+        shipToState:
+          type: string
+        shipToZip:
+          type: string
+        email:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        google_id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        gender:
+          type: string
+        date_of_birth:
+          type: string
+          format: date-time
+        street_address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip_code:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+  responses:
+    Standard400ErrorResponse:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Standard404ErrorResponse:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Standard500ErrorResponse:
+      description: An unexpected error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  
+  
+    
+  
+  
