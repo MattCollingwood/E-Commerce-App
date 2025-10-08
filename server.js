@@ -13,7 +13,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const flash = require('connect-flash');
 const path = require('path');
-const db = require('../db');
+const db = require('./db');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const oneDay = 1000 * 60 * 60 * 24;
@@ -23,7 +23,6 @@ const corsOptions = {
     optionSuccessStatus: 200
 };
 require('./config/passport')(passport);
-app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 
 app.use(flash());
@@ -32,6 +31,15 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.json());
 app.use('/auth', authRoutes);
+
+console.log('SESSION_SECRET:', process.env.SESSION_SECRET);
+
+// Middleware to set CSP headers
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "default-src 'self' http://localhost:3000; connect-src 'self' http://localhost:3000; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000; style-src 'self' 'unsafe-inline' http://localhost:3000; img-src 'self' data: http://localhost:3000; font-src 'self' data: http://localhost:3000; frame-src 'self' http://localhost:3000;");
+  next();
+});
+
 
 app.use(session({
     name: 'sid',
