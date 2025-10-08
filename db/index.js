@@ -1,6 +1,8 @@
-import pg from 'pg'
-const { Pool, Client } = pg
+const { Pool } = require('pg');
+const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 
+// Create your pg Pool
 const pool = new Pool({
   user: process.env.USER,
   host: process.env.DB_HOST,
@@ -9,15 +11,17 @@ const pool = new Pool({
   port: 5432
 });
 
-console.log(await pool.query('SELECT NOW()'));
+// Export a sessionHandler function
+function sessionHandler(session) {
+  return new PgSession({
+    pool: pool,
+    tableName: 'session', // optional: defaults to 'session'
+    createTableIfMissing: true // creates the session table if it doesn't exist
+  });
+}
 
-const client = new Client({
-    user: process.env.USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: null,
-    port: 5432
-});
-await client.connect();
-console.log(await client.query('SELECT NOW()'));
-await client.end();
+// Export the pool if needed elsewhere
+module.exports = {
+  sessionHandler,
+  pool
+};
