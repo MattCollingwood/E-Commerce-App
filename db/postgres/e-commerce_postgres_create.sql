@@ -1,19 +1,22 @@
-CREATE TABLE products (
+CREATE TABLE product (
   product_id serial PRIMARY KEY,
-  item varchar(50) NOT NULL,
-  price money NOT NULL,
+  name varchar(50) NOT NULL,
+  manufacturer varchar(50) NOT NULL,
+  sell_price money NOT NULL,
   description text NOT NULL,
   category varchar(50) NOT NULL,
   size char(2) NOT NULL,
   gender char(1),
   color varchar(10)  NOT NULL,
+  url varchar(100) NOT NULL,
+  stock_quantity int NOT NULL,
   rating int, 
   best_seller_tag bool NOT NULL
 );
  
 
-CREATE TABLE customers (
-  customer_id uuid PRIMARY KEY,
+CREATE TABLE users (
+  user_id uuid PRIMARY KEY,
   cart_id uuid NOT NULL UNIQUE,
   username varchar(30) NOT NULL UNIQUE,
   password varchar(64),
@@ -31,8 +34,8 @@ CREATE TABLE customers (
 );
  
 CREATE TABLE cart (
-  cart_id uuid REFERENCES customers(cart_id),
-  product_id serial REFERENCES products(product_id),
+  cart_id uuid REFERENCES users(cart_id),
+  product_id serial REFERENCES product(product_id),
   cart_quantity integer NOT NULL,
   PRIMARY KEY (cart_id, product_id)
 );
@@ -43,20 +46,20 @@ CREATE TABLE orders (
   status varchar(20) NOT NULL,
   total money NOT NULL,
   ship_date date,
-  ship_customer varchar(50) NOT NULL,
-  ship_street varchar(50) NOT NULL,
-  ship_city varchar(30) NOT NULL,
-  ship_state varchar(2) NOT NULL,
-  ship_zip varchar(10) NOT NULL,
+  shipto_name varchar(50) NOT NULL,
+  shipto_street varchar(50) NOT NULL,
+  shipto_city varchar(30) NOT NULL,
+  shipto_state varchar(2) NOT NULL,
+  shipto_zip varchar(10) NOT NULL,
   email varchar(50)  NOT NULL,
   payment_type varchar(20) NOT NULL,
   card_num char(5) NOT NULL,
-  customer_id uuid REFERENCES customers(customer_id)
+  user_id uuid REFERENCES users(user_id)
 );
 
 CREATE TABLE order_details (
   order_id serial REFERENCES orders(order_id),
-  product_id serial REFERENCES products(product_id),
+  product_id serial REFERENCES product(product_id),
   order_quantity int NOT NULL,
   item_price money NOT NULL,
   PRIMARY KEY (order_id, product_id)
@@ -67,5 +70,8 @@ CREATE TABLE session (
 	sess json NOT NULL,
 	expire timestamp(6) NOT NULL
 );
+
+CREATE INDEX idx_session_expire ON session(expire);
+
 
 CREATE INDEX idx_session_expire ON session(expire);
